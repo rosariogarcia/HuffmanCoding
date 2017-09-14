@@ -1,46 +1,69 @@
 package com.minions.huffmancoding.Algorithm;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Charito on 8/23/2017.
+ * This class contains util methods
  */
 public class Utils {
-    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> unsortMap) {
 
-        List<Map.Entry<K, V>> list =
-                new LinkedList<Map.Entry<K, V>>(unsortMap.entrySet());
-
-        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
-            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
-                return (o1.getValue()).compareTo(o2.getValue());
+    public static boolean containsSymbol(List<HuffmanNode> huffmanNodeList, String symbol) {
+        for(HuffmanNode o : huffmanNodeList) {
+            if(o != null && o.symbol.equals(symbol)) {
+                return true;
             }
-        });
-
-        Map<K, V> result = new LinkedHashMap<K, V>();
-        for (Map.Entry<K, V> entry : list) {
-            result.put(entry.getKey(), entry.getValue());
         }
-        return result;
+        return false;
+    }
+    
+    public static int getIndexHuffmanNode(List<HuffmanNode> huffmanNodeList, String symbol){
+        for(int i= 0; i< huffmanNodeList.size(); i++) {
+            if(huffmanNodeList.get(i).symbol.equals(symbol)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
-
-    public static List<Character> getInput(String fileName) throws IOException {
+    /**
+     * Get Character List from file to compress
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    public static List<String> getInput(String fileName) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(fileName);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
         Integer frequencyDefault = 1;
         String strLine;
-        List<Character> orderedList = new ArrayList<Character>();
+        List<String> orderedList = new ArrayList<String>();
         while ((strLine = bufferedReader.readLine()) != null) {
             for (char c : strLine.toCharArray()) {
-                orderedList.add(c);
+                orderedList.add(String.valueOf(c));
             }
         }
         fileInputStream.close();
         return orderedList;
+    }
+
+    public static byte[] getByteArray(Header header) throws IOException {
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(header);
+            out.flush();;
+            byte[] yourBytes = bos.toByteArray();
+            return yourBytes;
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
     }
 }

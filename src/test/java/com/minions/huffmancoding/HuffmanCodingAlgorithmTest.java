@@ -1,5 +1,6 @@
 package com.minions.huffmancoding;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,12 +23,13 @@ public class HuffmanCodingAlgorithmTest {
 
     @Test
     public void setCodeToTheTree() throws Exception {
-        List<Character> input = Utils.getInput("src/test/resources/input.txt");
-        HashMap<String, Integer> orderedList = huffmanCodingAlgorithm.GetOrderedList(input);
-        List<HuffmanNode> huffmanNodeList = huffmanCodingAlgorithm.GetHuffmanNodeList(orderedList);
-        huffmanCodingAlgorithm.getTreeFromList(huffmanNodeList);
-        huffmanCodingAlgorithm.setCodeToTheTree("", huffmanNodeList.get(0));
-        HashMap<String, String> leafAndCode = huffmanCodingAlgorithm.PrintfLeafAndCodes(huffmanNodeList.get(0));
-        huffmanCodingAlgorithm.WriteCompressFile(input, leafAndCode);
+        List<String> inputText = Utils.getInput("src/test/resources/input.txt");
+        List<HuffmanNode> orderedList = huffmanCodingAlgorithm.GetOrderedList(inputText);
+        //List<HuffmanNode> huffmanNodeList = huffmanCodingAlgorithm.GetHuffmanNodeList(orderedList);
+        HuffmanNode rootHuffmanTree = huffmanCodingAlgorithm.buildTreeFromOrderedList(orderedList);
+        huffmanCodingAlgorithm.setCodeToTheTree("", orderedList.get(0));
+        HashMap<String, String> symbolAndCode = huffmanCodingAlgorithm.PrintfLeafAndCodes(orderedList.get(0));
+        huffmanCodingAlgorithm.writeCompressFile(inputText, symbolAndCode, "output.hc");
+        huffmanCodingAlgorithm.uncompressFile(Paths.get("D:/me/minions/Gitlab/HuffmanCoding/output.hc"));
     }
 }
